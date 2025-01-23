@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -20,6 +21,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'Ce champs ne doit pas être vide')]
+    #[Assert\Length(min: 4, max: 50, minMessage: 'Le nom doit avoir au moins {{ limit }} caractères')]
     private ?string $username = null;
 
     /**
@@ -32,7 +35,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Le mot de passe ne doit pas être vide')]
+    #[Assert\Length(min: 8, minMessage: 'Le mot de passe doit avoir au minimum {{ limit }} caractères ')]
     private ?string $password = null;
+
+    #[Assert\EqualTo(propertyPath: 'password', message: 'les deux mots de passe ne sont pas identiques')]
+    private ?string $confirmPassword = null;
 
     /**
      * @var Collection<int, Comment>
@@ -45,6 +53,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Trick::class, mappedBy: 'author')]
     private Collection $tricks;
+
+    #[ORM\Column(length: 50, nullable:true)]
+    #[Assert\NotBlank(message:"ce message ne peut pas être vide")]
+    #[Assert\Email(message:" Veuillez renseigner un e-mail valide")]
+    private ?string $email = null;
 
     public function __construct()
     {
@@ -183,6 +196,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $trick->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getConfirmPassword(): ?string
+    {
+        return $this->confirmPassword;
+    }
+
+    public function setConfirmPassword(string $confirmPassword): self
+    {
+        $this->confirmPassword = $confirmPassword;
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
 
         return $this;
     }
