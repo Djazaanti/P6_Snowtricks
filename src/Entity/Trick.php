@@ -45,7 +45,7 @@ class Trick
 
     public function __construct()
     {
-        $this->author = new ArrayCollection();
+        // $this->author = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->Illustration = new ArrayCollection();
         $this->video = new ArrayCollection();
