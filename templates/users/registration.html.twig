@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+{% block title %} Registration {% endblock %}
+
+{% block body %}
+    <h1> Registration </h1>
+
+    <div class="row">
+        {{ form_start(form) }}
+            <div class="col-md-6"> {{ form_row(form.username) }} </div>
+            <div class="col-md-6"> {{ form_row(form.email) }} </div>
+            <div class="col-md-6"> {{ form_row(form.password) }} </div>
+            <div class="col-md-6"> {{ form_row(form.confirmPassword) }} </div>
+            <button class="btn btn-primary" type='submit'> Envoyer </button>
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}
