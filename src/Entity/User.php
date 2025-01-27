@@ -13,6 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -24,6 +26,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: 'Ce champs ne doit pas être vide')]
     #[Assert\Length(min: 4, max: 50, minMessage: 'Le nom doit avoir au moins {{ limit }} caractères')]
     private ?string $username = null;
+ 
+    #[ORM\Column(length: 50, nullable:true)]
+    #[Assert\NotBlank(message:"ce champs ne peut pas être vide")]
+    #[Assert\Email(message:" Veuillez renseigner un e-mail valide")]
+    private ?string $email = null;
 
     /**
      * @var list<string> The user roles
@@ -53,11 +60,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Trick::class, mappedBy: 'author')]
     private Collection $tricks;
-
-    #[ORM\Column(length: 50, nullable:true)]
-    #[Assert\NotBlank(message:"ce message ne peut pas être vide")]
-    #[Assert\Email(message:" Veuillez renseigner un e-mail valide")]
-    private ?string $email = null;
 
     public function __construct()
     {

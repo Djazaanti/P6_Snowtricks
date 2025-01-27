@@ -32,7 +32,7 @@ final class RegistrationController extends AbstractController
 
             $this->addFlash('success', 'Vos données sont enregistrées avec succès' );
 
-            // return $this->redirectToRoute('users/connexion.html.twig');
+            // return $this->redirectToRoute('security/login2.html.twig');
             return $this->redirectToRoute('home');
 
         }
